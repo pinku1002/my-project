@@ -1,0 +1,122 @@
+<%- include("layouts/header.ejs") %>
+
+<body>
+    <%- include("layouts/navbar.ejs") %>
+
+    <!-- Page Header -->
+    <header class="masthead" style="background-image: url('../images/g.jpg')">
+        <div class="container px-4 px-lg-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-12 text-center">
+                    <!-- Page Heading -->
+                    <h1 class="text-uppercase custom-welcome-text">Welcome, <%= user.firstname %>!</h1>
+                    <!-- User Type -->
+                    <p class="custom-user-type-text">User Type: <%= user.userType %></p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Section: Book a G Road Test -->
+    <div class="container px-4 px-lg-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-12 text-center">
+                <h2 class="section-heading text-uppercase">Book a G Road Test</h2>
+                <p class="text-muted">Please check/update your information</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Information Form (Read-Only except Car Info) -->
+    <div class="container px-4 px-lg-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <form action="/updateCarDetails" method="POST">
+                    <h3 class="text-center">User Info</h3>
+                    <div class="mb-3">
+                        <label for="firstname" class="form-label"><strong>First Name</strong></label>
+                        <input type="text" class="form-control readonly-field" id="firstname" value="<%= user.firstname %>" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="lastname" class="form-label"><strong>Last Name</strong></label>
+                        <input type="text" class="form-control readonly-field" id="lastname" value="<%= user.lastname %>" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="licenseNo" class="form-label"><strong>License No</strong></label>
+                        <input type="text" class="form-control readonly-field" id="licenseNo" value="<%= user.licenseNo %>" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="age" class="form-label"><strong>Age</strong></label>
+                        <input type="text" class="form-control readonly-field" id="age" value="<%= user.age %>" readonly>
+                    </div>
+
+                    <!-- Editable Car Info Section -->
+                    <h3 class="text-center">Car Info</h3>
+                    <div class="mb-3">
+                        <label for="carMake" class="form-label"><strong>Car Make</strong></label>
+                        <input type="text" class="form-control" name="carMake" id="carMake" value="<%= user.car_details ? user.car_details.make : '' %>">
+                    </div>
+                    <div class="mb-3">
+                        <label for="carModel" class="form-label"><strong>Car Model</strong></label>
+                        <input type="text" class="form-control" name="carModel" id="carModel" value="<%= user.car_details ? user.car_details.model : '' %>">
+                    </div>
+                    <div class="mb-3">
+                        <label for="carYear" class="form-label"><strong>Car Year</strong></label>
+                        <input type="text" class="form-control" name="carYear" id="carYear" value="<%= user.car_details ? user.car_details.year : '' %>">
+                    </div>
+                    <div class="mb-3">
+                        <label for="carPlateNo" class="form-label"><strong>Car Plate No</strong></label>
+                        <input type="text" class="form-control" name="carPlateNo" id="carPlateNo" value="<%= user.car_details ? user.car_details.platno : '' %>">
+                    </div>
+                    <!-- Submit Button for Car Info -->
+                    <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-primary">Update Car Info</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Display Success/Failure Messages -->
+    <% if (success_msg) { %>
+        <div class="alert alert-success" role="alert">
+            <%= success_msg %>
+        </div>
+    <% } %>
+
+    <% if (error_msg) { %>
+        <div class="alert alert-danger" role="alert">
+            <%= error_msg %>
+        </div>
+    <% } %>
+
+    <!-- Custom CSS for Read-Only Fields -->
+    <style>
+        .readonly-field {
+            background-color: #e7f3ff; /* Light blue background */
+            color: #2c3e50; /* Darker text color */
+            font-weight: bold;
+        }
+
+        .custom-welcome-text {
+            color: #3498db; /* Blue */
+        }
+
+        .custom-user-type-text {
+            color: #d10af0; /* Green */
+            font-weight: bold;
+        }
+
+        .section-heading {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .text-muted {
+            font-size: 1.25rem;
+            color: #777;
+        }
+    </style>
+</body>
+</html>

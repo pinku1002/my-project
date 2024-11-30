@@ -1,0 +1,92 @@
+<%- include("layouts/header.ejs") %>
+
+    <body>
+        <%- include("layouts/navbar.ejs") %>
+
+            <!-- Page Header-->
+            <header class="masthead" style="background-image: url('/images/test1.avif')">
+                <div class="container position-relative px-4 px-lg-5">
+                    <div class="row gx-4 gx-lg-5 justify-content-center">
+                        <div class="col-md-10 col-lg-8 col-xl-7">
+                            <div class="site-heading">
+                                <h1>Dashboard</h1>
+                               
+                                <% if (userLoggedIn) { %>
+                                    <p>Welcome back, <%= username %>! Ready to book your test?</p>
+                                    <% } else { %>
+                                        <p>Welcome! Please <a href="/login">login</a> to book your test.</p>
+                                        <% } %>
+
+                                            <span class="subheading">Drive Test Booking Kiosk</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+
+            <!-- Main Content-->
+            <div class="container px-4 px-lg-5">
+                <div class="row gx-4 gx-lg-5 justify-content-center">
+                    <div class="col-md-10 col-lg-8 col-xl-7">
+                        <!-- Post previews -->
+                        <div class="post-preview">
+                            <a href="post.html">
+                                <h2 class="post-title">Book Your G2/G Drive Test with Ease from this Kiosk</h2>
+                                <h3 class="post-subtitle">Book, manage, and check your test status online</h3>
+                            </a>
+                            <p class="post-meta">
+                                Posted by <a href="#!">G2/G Drive Test Kiosk</a> on September 12, 2024
+                            </p>
+                        </div>
+                        <hr class="my-4" />
+
+                        <div class="post-preview">
+                            <a href="post.html">
+                                <h2 class="post-title">Why Driving Tests Are Important</h2>
+                            </a>
+                            <p class="post-meta">
+                                Posted by <a href="#!">G2/G Drive Test Kiosk</a> on September 18, 2024
+                            </p>
+                        </div>
+                        <hr class="my-4" />
+
+                        <div class="post-preview">
+                            <a href="post.html">
+                                <h2 class="post-title">Hassle-Free Booking Process</h2>
+                                <h3 class="post-subtitle">Say goodbye to long queues, book your test instantly!</h3>
+                            </a>
+                            <p class="post-meta">
+                                Posted by <a href="#!">G2/G Drive Test Kiosk</a> on September 12, 2024
+                            </p>
+                        </div>
+                        <hr class="my-4" />
+
+                        <div class="post-preview">
+                            <a href="post.html">
+                                <h2 class="post-title">Test Preparation Tips</h2>
+                                <h3 class="post-subtitle">Make sure you are ready for your driving test</h3>
+                            </a>
+                            <p class="post-meta">
+                                Posted by <a href="#!">Drive Test Kiosk</a> on September 12, 2024
+                            </p>
+                        </div>
+                        <hr class="my-4" />
+
+                        <!-- Pager-->
+                        <div class="d-flex justify-content-end mb-4">
+                            <a class="btn btn-primary text-uppercase" href="#!">Older Posts →</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <%- include("layouts/footer.ejs") %>
+
+                <!-- Bootstrap core JS-->
+                <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+                <!-- Core theme JS-->
+                <script src="/js/scripts.js"></script>
+    </body>
+
+    </html>

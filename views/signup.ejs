@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sign Up</title>
+    <style>
+        /* General styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .form-container {
+            width: 100%;
+            max-width: 500px; /* Limit the width of the form */
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #ffffff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: left; /* Align text to the left */
+        }
+
+        .imgcontainer {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .avatar {
+            width: 100px; /* Limit avatar size */
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+            text-align: center; /* Align heading to center */
+        }
+
+        label {
+            font-size: 14px;
+            margin-bottom: 5px;
+            display: block; /* Ensure the labels are on their own line */
+            text-align: left; /* Align the label to the left */
+        }
+
+        input, select, button {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        input[type="password"]:focus, input[type="text"]:focus, select:focus {
+            border-color: #4CAF50;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .error-msg {
+            color: red;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .success-msg {
+            color: green;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .container p {
+            font-size: 14px;
+            margin-top: 20px;
+        }
+
+        .container p a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+
+        .container p a:hover {
+            text-decoration: underline;
+        }
+
+    </style>
+</head>
+<body>
+
+<!-- Removed header and navbar to avoid them appearing above the form -->
+
+<div class="container">
+    <div class="form-container">
+        <div class="imgcontainer">
+            <img src="images/avtar.png" alt="Avatar" class="avatar">
+        </div>
+        <h2>Sign Up</h2>
+
+        <!-- Error Message -->
+        <% if (error_msg) { %>
+            <div class="error-msg">
+                <%= error_msg %>
+            </div>
+        <% } %>
+
+        <!-- Success Message -->
+        <% if (success_msg) { %>
+            <div class="success-msg">
+                <%= success_msg %>
+            </div>
+        <% } %>
+
+        <form action="/signup" method="POST">
+            <label for="username"><b>Username</b></label>
+            <input type="text" placeholder="Enter Username" name="username" required aria-label="Username">
+
+            <label for="password"><b>Password</b></label>
+            <input type="password" placeholder="Enter Password" name="password" required aria-label="Password">
+
+            <label for="confirmPassword"><b>Repeat Password</b></label>
+            <input type="password" placeholder="Repeat Password" name="confirmPassword" required aria-label="Confirm Password">
+
+            <label for="userType"><b>Select User Type</b></label>
+            <select name="userType" required>
+                <option value="" disabled selected>Select User Type</option>
+                <option value="Driver">Driver</option>
+                <option value="Examiner">Examiner</option>
+                <option value="Admin">Admin</option>
+            </select>
+
+            <button type="submit">Sign Up</button>
+        </form>
+
+        <div class="container" style="background-color:#f1f1f1">
+            <p>Already a member? <a href="/login">Login now</a></p>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Password match validation
+    document.querySelector("form").addEventListener("submit", function(event) {
+        const password = document.querySelector("input[name='password']").value;
+        const confirmPassword = document.querySelector("input[name='confirmPassword']").value;
+        
+        if (password !== confirmPassword) {
+            alert("Passwords do not match.");
+            event.preventDefault();
+        }
+
+        // Optional: Validate username (e.g., check if it's alphanumeric)
+        const username = document.querySelector("input[name='username']").value;
+        const usernameRegex = /^[a-zA-Z0-9_]+$/; // Only alphanumeric and underscores
+        if (!usernameRegex.test(username)) {
+            alert("Username should contain only letters, numbers, and underscores.");
+            event.preventDefault();
+        }
+
+        // Optional: Validate password length (e.g., minimum 8 characters)
+        if (password.length < 8) {
+            alert("Password must be at least 8 characters long.");
+            event.preventDefault();
+        }
+    });
+</script>
+
+</body>
+</html>

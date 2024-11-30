@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - Manage Appointment Slots</title>
+  
+  <style>
+    /* General Styles */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+
+    header {
+      background-color: #333;
+      color: white;
+      padding: 30px 20px;
+      text-align: center;
+    }
+
+    main {
+      padding: 40px 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    h2, h3, h4 {
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    h3 {
+      font-size: 24px;
+      font-weight: 600;
+    }
+
+    h4 {
+      font-size: 20px;
+      margin-bottom: 20px;
+    }
+
+    section {
+      background-color: white;
+      padding: 20px;
+      margin-bottom: 40px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px; /* Increase spacing between sections */
+    }
+
+    /* Updated to show 4 time slots per row */
+    .time-slots-container {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr); /* 4 equal columns */
+      gap: 15px;  /* Spacing between buttons */
+      width: 100%;
+      justify-items: center;
+      margin-bottom: 30px;
+    }
+
+    .appointment-btn {
+      padding: 15px 20px;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      text-align: center;
+      min-width: 100px;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .appointment-btn.blue {
+      background-color: #4CAF50;
+    }
+
+    .appointment-btn.disabled {
+      background-color: #ccc;
+      color: #666;
+      cursor: not-allowed;
+    }
+
+    .appointment-btn:hover {
+      background-color: #45a049;
+      transform: scale(1.05);
+    }
+
+    .appointment-btn.disabled:hover {
+      background-color: #ccc;
+    }
+
+    .create-appointment-btn {
+      margin-top: 20px;
+      background-color: #333;
+      color: white;
+      padding: 15px 30px;
+      font-size: 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .create-appointment-btn:hover {
+      background-color: #555;
+    }
+
+    /* Form Styling */
+    form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+    }
+
+    input[type="date"], input[type="time"] {
+      padding: 12px 20px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      width: 100%;
+      max-width: 300px;
+    }
+
+    label {
+      font-size: 18px;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+
+  </style>
+</head>
+
+<body>
+  <!-- Include header layout -->
+  <%- include("layouts/header.ejs") %>
+
+  <!-- Navbar -->
+  <%- include("layouts/navbar.ejs") %>
+
+  <header>
+    <h6>Admin Dashboard - Manage Appointment Slots</h6>
+  </header>
+
+  <main>
+    <% if (userLoggedIn) { %>
+      <h2>Welcome, Admin <%= userLoggedIn.username %>!</h2>
+    <% } else { %>
+      <p>Please log in to manage appointment slots.</p>
+    <% } %>
+
+    <section>
+      <h3>Create Appointment Slots for a Date</h3>
+
+      <!-- Date Selection Form -->
+      <form method="GET" action="/manageAppointment">
+        <label for="date">Select Date:</label>
+        <input type="date" name="date" id="date" value="<%= selectedDate %>" onchange="this.form.submit()" required />
+      </form>
+
+      <% if (selectedDate) { %>
+        <h4>Available Times for <%= selectedDate %></h4>
+        
+        <!-- Appointment Times Form -->
+        <form method="POST" action="/manageAppointment">
+          <label>Select Appointment Times:</label>
+          <div class="time-slots-container">
+            <% const times = ['9:00', '9:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '1:00', '1:30', '2:00']; %>
+            <% times.forEach(time => { %>
+              <button type="button"
+                class="appointment-btn <%= existingTimes.includes(time) ? 'disabled' : 'blue' %>"
+                <%= existingTimes.includes(time) ? 'disabled' : '' %>
+                onclick="setTime('<%= time %>')">
+                <%= time %>
+              </button>
+            <% }) %>
+          </div>
+
+          <input type="hidden" name="date" value="<%= selectedDate %>" />
+          <input type="hidden" name="time" id="time" required />
+
+          <button type="submit" class="create-appointment-btn">Create Appointment Slot</button>
+        </form>
+      <% } else { %>
+        <p>Please select a date to view available appointment slots.</p>
+      <% } %>
+    </section>
+  </main>
+
+  <script>
+    // Function to set the selected time into the hidden input field
+    function setTime(selectedTime) {
+      document.getElementById('time').value = selectedTime;
+    }
+  </script>
+
+  <!-- Footer -->
+  <%- include("layouts/footer.ejs") %>
+</body>
+
+</html>
