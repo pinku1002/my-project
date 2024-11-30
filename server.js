@@ -1,6 +1,7 @@
 // Use ES module syntax consistently
 import express from 'express';
 import session from 'express-session';
+import connectMongo from 'connect-mongo';
 import mongoose from 'mongoose';
 import path from 'path';
 import { fileURLToPath } from 'url';
