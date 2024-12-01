@@ -1,61 +1,45 @@
-// Use ES module syntax consistently
 import express from 'express';
 import session from 'express-session';
-import connectMongo from 'connect-mongo';
 import mongoose from 'mongoose';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { MemoryStore } from 'express-session';
 import dotenv from 'dotenv';
+import { MemoryStore } from 'express-session';  // Import MemoryStore
 import routes from './routes/routes.js';  // Import your routes
 import adminRoutes from './routes/admin.js';  // Admin routes if any
 import appointmentRoutes from './routes/appointment.js';  // Appointment routes if any
 
-// Load environment variables from .env file
-dotenv.config();
+dotenv.config();  // Load environment variables from .env file
 
-// MongoDB Atlas connection URI
-const uri = process.env.MONGO_URI;
+// Get __filename and __dirname equivalent in ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-// Get __dirname in ES modules
-const __filename = fileURLToPath(import.meta.url);  // Get the resolved path to the file
-const __dirname = path.dirname(__filename);  // Get the name of the directory
-
-// Create the express app
 const app = express();
+const uri = process.env.MONGO_URI;  // MongoDB connection URI
 
-// Connect to MongoDB Atlas
+// MongoDB connection setup
 mongoose.connect(uri)
-  .then(() => console.log('MongoDB connected to Atlas (cardatabase)'))
+  .then(() => console.log('MongoDB connected to Atlas'))
   .catch(err => {
-    console.log('MongoDB connection error:', err);
-    process.exit(1);  // Exit process if DB connection fails
+    console.error('MongoDB connection error:', err);
+    process.exit(1);
   });
 
 // Middleware setup
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, 'views'));  // Views folder path
 
-// Session setup
+// Session setup using MemoryStore (not recommended for production)
 app.use(session({
-  secret: 'your-secret-key',  // Use a strong secret in production
+  secret: process.env.SESSION_SECRET || 'your-secret-key',  // Use a strong secret in production
   resave: false,
   saveUninitialized: false,
-  cookie: { secure: false, httpOnly: true, maxAge: 10 * 60 * 1000 },  // Set session cookie to expire in 10 minutes
-  store: new MemoryStore({
-    checkPeriod: 10 * 60 * 1000,  // Clean expired sessions every 10 minutes
-  }),
+  cookie: { secure: process.env.NODE_ENV === 'production', httpOnly: true, maxAge: 10 * 60 * 1000 },  // Set session cookie
+  store: new MemoryStore(),  // Use MemoryStore for session storage
 }));
-
-// Session middleware to make user data available in views
-app.use((req, res, next) => {
-  if (req.session && req.session.user) {
-    res.locals.user = req.session.user;  // Make user session data available in all views
-  }
-  next();
-});
 
 // Authentication middleware (can be used to protect certain routes)
 const isAuthenticated = (req, res, next) => {
@@ -66,22 +50,32 @@ const isAuthenticated = (req, res, next) => {
   }
 };
 
-// Use routes
-app.use('/', routes);  // Root routes
+// Routes setup
+app.use('/', routes);  // Root routes (public, login, signup, etc.)
 app.use('/admin', isAuthenticated, adminRoutes);  // Admin routes (protected)
-app.use('/appointments', appointmentRoutes);  // Appointment routes
+app.use('/appointments', isAuthenticated, appointmentRoutes);  // Appointment routes (protected)
 
 // Static files (for CSS, JS, images, etc.)
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Error handling middleware (catch-all for unhandled errors)
+// Test route to check if server is working
+app.get('/test', (req, res) => {
+  res.send('Server is working!');
+});
+
+// Error handling middleware
 app.use((err, req, res, next) => {
   console.error('Error occurred:', err);
   res.status(500).send('Something went wrong!');
 });
 
-// Server setup
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
+// If running locally, start the server on a specific port
+if (process.env.NODE_ENV !== 'production') {
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+  });
+}
+
+// Export the Vercel handler (for production)
+export default app;
